@@ -1,7 +1,5 @@
 # 🚀 LapStore - LaptopBazaar
 
-![Preview](./preview.jpg)
-
 A modern and responsive online store for displaying and purchasing laptops from reputable brands with full shopping cart management capabilities
 
 ## ✨ Project Features
@@ -20,7 +18,7 @@ A modern and responsive online store for displaying and purchasing laptops from 
 
 ## 🛠️ Technologies used
 
-- ![HTML5
+- ![HTML5]
 - ![CSS3]
 - ![JavaScript]
 - ![Font Awesome]
