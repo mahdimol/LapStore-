@@ -102,86 +102,13 @@ const products = [
   },
 ];
 
-// let basket = [];
-
-// const productsContainer = document.querySelector(".wrapper");
-// const openBasketBtn = document.querySelector(".open-basket");
-// const basketScreen = document.querySelector(".basket-screen");
-
-// function showProducts() {
-//   products.forEach(function (product) {
-//     productsContainer.insertAdjacentHTML(
-//       "beforeend",
-//       `
-// <article>
-//   <header class="product-header">
-//     <img
-//       src="${product.img}"
-//       class="product-img"
-//       alt=""
-//     />
-//   </header>
-//   <main class="product-body">
-//     <h3 class="product-title">
-//       ${product.title}
-//     </h3>
-//     <p class="desc">
-//       ${product.description}
-//     </p>
-//   </main>
-//   <footer class="product-footer">
-//     <p class="price">${product.price.toLocaleString()} ت</p>
-//     <button class="add-to-cart" onclick="addProductToBasket(${
-//       product.id
-//     })">
-//       <i class="bx bx-cart-alt"></i>
-//       افزودن به سبد
-//     </button>
-//   </footer>
-// </article>
-//       `
-//     );
-//   });
-// }
-
-// function addProductToBasket(productID) {
-//   const mainProduct = products.find(function (product) {
-//     return product.id === productID;
-//   });
-
-//   basket.push(mainProduct);
-//   saveBasketInLocalStorage();
-// }
-
-// function saveBasketInLocalStorage() {
-//   localStorage.setItem("basket", JSON.stringify(basket));
-// }
-
-// function showBasketProducts() {
-//   basketScreen.classList.remove("hidden");
-
-//   basket.forEach(function (product) {
-//     // Codes
-//   });
-// }
-
-// function getProductsFromLocalStorage() {
-//   const localBasket = JSON.parse(localStorage.getItem("basket"));
-
-//   if (localBasket) {
-//     basket = localBasket;
-//   }
-
-//   showProducts();
-// }
-
-// openBasketBtn.addEventListener("click", showBasketProducts);
-
-//*********************** */
-
 const productsContainer = document.querySelector(".wrapper");
 const openBasketBtn = document.querySelector(".open-basket");
+const basketProductContainer = document.querySelector(".basket-main");
+const closeBasketBtn = document.querySelector(".close-basket");
 const basketScreen = document.querySelector(".basket-screen");
+const totalPriceElem = document.querySelector(".total-price");
+const clearBasketButton = document.querySelector(".clear-button");
 
 let basket = [];
 
@@ -227,6 +154,7 @@ function addProductToBasket(productID) {
   });
   basket.push(mainProduct);
   saveBasketInLocalStorage();
+  calculateTotalPrice();
 }
 
 function saveBasketInLocalStorage() {
@@ -234,8 +162,61 @@ function saveBasketInLocalStorage() {
 }
 function showBasketProduct() {
   basketScreen.classList.remove("hidden");
-  basket.forEach(function (product) {});
+
+  basketProductContainer.innerHTML = "";
+  if (basket.length) {
+    basket.forEach(function (product) {
+      basketProductContainer.insertAdjacentHTML(
+        "beforeend",
+        `
+              <article class="basket-item">
+                <div class="flex-center">
+                  <img src="${product.img}" alt="" />
+                  <div class="basket-item_details">
+                    <p class="basket-item_title">
+                    ${product.title}
+                    </p>
+                    <p class="basket-item_price">${product.price.toLocaleString()}ت</p>
+                  </div>
+                  <div>
+                    <div class="buttons">
+                      <button class="increase">
+                        <i class="bx bx-plus"></i>
+                      </button>
+                      <button class="remove-button">
+                        <!-- Boxicons trash icon -->
+                        <i class="bx bx-trash"></i>
+                      </button>
+                      <button class="decrease">
+                        <!-- Decrease icon -->
+                        <i class="bx bx-minus"> </i>
+                      </button>
+                    </div>
+                    <div class="product-count-card">
+                      <span>تعداد:</span>
+                      <span class="product-count">2</span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+      
+      
+      
+      `
+      );
+    });
+  } else {
+    basketProductContainer.innerHTML = `
+     <p class="empty-basket">
+                سبد خرید شما خالی می باشد :(
+     </p>`;
+  }
+  calculateTotalPrice();
 }
+function hideBasket() {
+  basketScreen.classList.add("hidden");
+}
+
 function getProductsFromLocalStorage() {
   const localBasket = JSON.parse(localStorage.getItem("basket"));
   if (localBasket) {
@@ -243,4 +224,20 @@ function getProductsFromLocalStorage() {
   }
   showProducts();
 }
+function calculateTotalPrice() {
+  let totalPrice = 0;
+  basket.forEach(function (product) {
+    totalPrice += product.price * 1;
+  });
+  totalPriceElem.innerHTML = totalPrice.toLocaleString();
+}
+function clearBasket() {
+  basket = [];
+  saveBasketInLocalStorage();
+  showBasketProduct();
+  calculateTotalPrice();
+}
+
 openBasketBtn.addEventListener("click", showBasketProduct);
+closeBasketBtn.addEventListener("click", hideBasket);
+clearBasketButton.addEventListener("click", clearBasket);
