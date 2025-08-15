@@ -109,6 +109,8 @@ const closeBasketBtn = document.querySelector(".close-basket");
 const basketScreen = document.querySelector(".basket-screen");
 const totalPriceElem = document.querySelector(".total-price");
 const clearBasketButton = document.querySelector(".clear-button");
+const productCountElem = document.querySelector(".count");
+const productCountElemInBasket = document.querySelector(".products-count");
 
 let basket = [];
 
@@ -152,9 +154,28 @@ function addProductToBasket(productID) {
   const mainProduct = products.find(function (product) {
     return product.id === productID;
   });
-  basket.push(mainProduct);
+  const isProductInBasket = basket.some(function (product) {
+    return product.id === mainProduct.id;
+  });
+
+  if (isProductInBasket) {
+    increaseProductCount(mainProduct.id);
+  } else {
+    const basketNewProduct = {
+      id: mainProduct.id,
+      title: mainProduct.title,
+      description: mainProduct.description,
+      img: mainProduct.img,
+      price: mainProduct.price,
+      count: 1,
+    };
+
+    basket.push(basketNewProduct);
+  }
+
   saveBasketInLocalStorage();
   calculateTotalPrice();
+  showBasketproductCountElem();
 }
 
 function saveBasketInLocalStorage() {
@@ -180,21 +201,27 @@ function showBasketProduct() {
                   </div>
                   <div>
                     <div class="buttons">
-                      <button class="increase">
+                      <button class="increase" onclick="increaseProductCount(${
+                        product.id
+                      })">
                         <i class="bx bx-plus"></i>
                       </button>
-                      <button class="remove-button">
+                      <button class="remove-button" onclick ="removeProductFromBasket(${
+                        product.id
+                      })">
                         <!-- Boxicons trash icon -->
                         <i class="bx bx-trash"></i>
                       </button>
-                      <button class="decrease">
+                      <button class="decrease" onclick="decreaseProductCount(${
+                        product.id
+                      })">
                         <!-- Decrease icon -->
                         <i class="bx bx-minus"> </i>
                       </button>
                     </div>
                     <div class="product-count-card">
                       <span>تعداد:</span>
-                      <span class="product-count">2</span>
+                      <span class="product-count">${product.count}</span>
                     </div>
                   </div>
                 </div>
@@ -212,7 +239,35 @@ function showBasketProduct() {
      </p>`;
   }
   calculateTotalPrice();
+  showBasketproductCountElem();
 }
+
+function increaseProductCount(productID) {
+  const productToIncreasseCount = basket.find(function (product) {
+    return product.id === productID;
+  });
+  productToIncreasseCount.count += 1;
+  saveBasketInLocalStorage();
+  calculateTotalPrice();
+  showBasketProduct();
+}
+function decreaseProductCount(productID) {
+  const productToIncreasseCount = basket.find(function (product) {
+    return product.id === productID;
+  });
+  productToIncreasseCount.count -= 1;
+  if (!productToIncreasseCount.count) {
+    const productToRemoveFromBasket = basket.find(function (product) {
+      return product.id === productID;
+    });
+    basket.splice(productToRemoveFromBasket, 1);
+  }
+
+  saveBasketInLocalStorage();
+  calculateTotalPrice();
+  showBasketProduct();
+}
+
 function hideBasket() {
   basketScreen.classList.add("hidden");
 }
@@ -223,11 +278,12 @@ function getProductsFromLocalStorage() {
     basket = localBasket;
   }
   showProducts();
+  showBasketproductCountElem();
 }
 function calculateTotalPrice() {
   let totalPrice = 0;
   basket.forEach(function (product) {
-    totalPrice += product.price * 1;
+    totalPrice += product.price * product.count;
   });
   totalPriceElem.innerHTML = totalPrice.toLocaleString();
 }
@@ -236,6 +292,21 @@ function clearBasket() {
   saveBasketInLocalStorage();
   showBasketProduct();
   calculateTotalPrice();
+  showBasketproductCountElem();
+}
+function showBasketproductCountElem() {
+  productCountElem.innerHTML = basket.length;
+  productCountElemInBasket.innerHTML = `(${basket.length})`;
+}
+function removeProductFromBasket(productID) {
+  const mainProductIndex = basket.findIndex(function (product) {
+    return product.id === productID;
+  });
+  basket.splice(mainProductIndex, 1);
+  saveBasketInLocalStorage();
+  calculateTotalPrice();
+  showBasketProduct();
+  showBasketProduct();
 }
 
 openBasketBtn.addEventListener("click", showBasketProduct);
