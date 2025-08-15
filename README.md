@@ -1,6 +1,6 @@
 # 🚀 LapStore - LaptopBazaar
 
-A modern and responsive online store for displaying and purchasing laptops from reputable brands with full shopping cart management capabilities
+This JavaScript code manages an e-commerce product listing and shopping basket functionality. It displays 12 laptop products with details, allows adding items to a cart, and handles cart operations like increasing/decreasing quantities, removing items, and calculating totals. The basket data persists using localStorage, and the UI updates dynamically to reflect cart changes. Users can open/close the basket modal and clear all items with interactive buttons.
 
 ## ✨ Project Features
 
