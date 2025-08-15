@@ -18,7 +18,7 @@ This JavaScript code manages an e-commerce product listing and shopping basket f
 
 ## 🛠️ Technologies used
 
-- ![HTML5]
-- ![CSS3]
-- ![JavaScript]
-- ![Font Awesome]
+- HTML5
+- CSS3
+- JavaScript
+- Font Awesome
